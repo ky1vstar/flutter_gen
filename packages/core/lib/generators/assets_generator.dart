@@ -356,16 +356,14 @@ class $className {
 String _assetGenImageClassDefinition(String packageName) {
   final packageParameter = packageName.isNotEmpty ? " = '$packageName'" : '';
 
-  final keyName = packageName.isEmpty
-      ? '_assetName'
-      : "'packages/$packageName/\$_assetName'";
+  final packageConstructor = packageName.isEmpty
+      ? ''
+      : ", package: '$packageName'";
 
   return '''
 
-class AssetGenImage {
-  const AssetGenImage(this._assetName);
-
-  final String _assetName;
+class AssetGenImage extends AssetImage {
+  const AssetGenImage(String assetName) : super(assetName$packageConstructor);
 
   Image image({
     Key? key,
@@ -393,7 +391,7 @@ class AssetGenImage {
     int? cacheHeight,
   }) {
     return Image.asset(
-      _assetName,
+      assetName,
       key: key,
       bundle: bundle,
       frameBuilder: frameBuilder,
@@ -420,9 +418,7 @@ class AssetGenImage {
     );
   }
 
-  String get path => _assetName;
-
-  String get keyName => $keyName;
+  String get path => assetName;
 }
 ''';
 }
